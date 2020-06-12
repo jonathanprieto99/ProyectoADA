@@ -71,13 +71,31 @@ vector<Pair> greedy_matching (vector<int> A, vector<int> B) {
 	}
 	return result;
 }
+/*
+
+vector<Pair> greedy_matching_recursive (vector<int> A, vector<int> B) {
+    vector<Pair> result;
+
+    vector<Pair> blocks_A = get_blocks (A);
+    vector<Pair> blocks_B = get_blocks (B);
+
+    int i = 0, j = 0, k = 0;
+    int n = blocks_A.size ();
+    int m = blocks_B.size ();
+
+    int max;
+
+    return result;
+}
+ */
 
 int main () {
 	vector<int> A{1, 0, 0, 1, 1, 0, 1};
 	vector<int> B{0, 1, 1, 1, 0, 0, 1};
 
 	vector<Pair> result = greedy_matching (A, B);
-	for (int i = 0; i < result.size (); i++) {
+	for (int i = 0; i < result.size (); i++)
+	{
 		cout << "(" << result[i].i << "," << result[i].j << ")" << " ";
 	}
 	cout << endl;

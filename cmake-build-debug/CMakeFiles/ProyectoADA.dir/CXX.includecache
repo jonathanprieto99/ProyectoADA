@@ -1,0 +1,16 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/alejandro/ProyectoADA/greedy_matching.cpp
+iostream
+-
+vector
+-
+
+/home/alejandro/ProyectoADA/main.cpp
+
