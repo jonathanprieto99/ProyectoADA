@@ -115,7 +115,7 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 		
 	if (A.size () == 1 and B.size () > 1) {
 		Pair match;
-		int sum = 0;
+		float sum = 0;
 		match.i = A[0].i;
 		for (auto it = 0; it < B.size (); it++) {
 			match.j = B[it].j;
@@ -127,7 +127,7 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 	}
 	if (B.size () == 1 and A.size () > 1){
 		Pair match;
-		int sum = 0;
+		float sum = 0;
 		match.j = B[0].j;
 		for (auto it = 0; it < A.size (); it++){
 			match.i = A[it].i;
@@ -229,7 +229,7 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 		
 	if (A.size () == 1 and B.size () > 1) {
 		Pair match;
-		int sum = 0;
+		float sum = 0;
 		match.i = A[0].i;
 		for (auto it = 0; it < B.size (); it++) {
 			match.j = B[it].j;
@@ -242,7 +242,7 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 
 	if (B.size () == 1 and A.size () > 1){
 		Pair match;
-		int sum = 0;
+		float sum = 0;
 		match.j = B[0].j;
 		for (auto it = 0; it < A.size (); it++){
 			match.i = A[it].i;
@@ -303,7 +303,7 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 
 
 int main () {
-	vector<int> A{1, 0, 0, 1, 1, 0};
+	vector<int> A{1, 0, 0, 1, 1, 0,1};
 	vector<int> B{0, 1, 1, 1, 0, 0};
 	cout << "Recursive Algorithm" << endl;
 
