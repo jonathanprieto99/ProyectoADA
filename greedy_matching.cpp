@@ -117,7 +117,7 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 		Pair match;
 		int sum = 0;
 		match.i = A[0].i;
-		for (int it = 0; it < B.size (); it++) {
+		for (auto it = 0; it < B.size (); it++) {
 			match.j = B[it].j;
 			min_match.matching.push_back (match);
 			sum += B[it].j;
@@ -129,7 +129,7 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 		Pair match;
 		int sum = 0;
 		match.j = B[0].j;
-		for (int it = 0; it < A.size (); it++){
+		for (auto it = 0; it < A.size (); it++){
 			match.i = A[it].i;
 			min_match.matching.push_back (match);
 			sum += A[it].i;
@@ -231,7 +231,7 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 		Pair match;
 		int sum = 0;
 		match.i = A[0].i;
-		for (int it = 0; it < B.size (); it++) {
+		for (auto it = 0; it < B.size (); it++) {
 			match.j = B[it].j;
 			min_match.matching.push_back (match);
 			sum += B[it].j;
@@ -244,7 +244,7 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 		Pair match;
 		int sum = 0;
 		match.j = B[0].j;
-		for (int it = 0; it < A.size (); it++){
+		for (auto it = 0; it < A.size (); it++){
 			match.i = A[it].i;
 			min_match.matching.push_back (match);
 			sum += A[it].i;
