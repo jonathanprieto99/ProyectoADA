@@ -17,7 +17,7 @@ struct Matching {
 /* Prototipos */
 vector<Pair> get_blocks (vector<int>);
 vector<Pair> greedy_matching (vector<int>, vector<int>);
-Matching greedy_matching_recursive (vector<int>, vector<int>);
+Matching min_matching_recursive (vector<int>, vector<int>);
 Matching opt_solution (vector<Pair>, vector<Pair>);
 Matching opt_solution_mem (vector<Pair>, vector<Pair>);
 vector<Pair> merge_matchings (vector<Pair>, vector<Pair>);
@@ -83,7 +83,7 @@ vector<Pair> greedy_matching (vector<int> A, vector<int> B) {
 	return result;
 }
 
-Matching greedy_matching_recursive (vector<int> A, vector<int> B) {
+Matching min_matching_recursive (vector<int> A, vector<int> B) {
     vector<Pair> result;
 
     vector<Pair> blocks_A = get_blocks (A);
@@ -190,7 +190,7 @@ vector<Pair> merge_matchings (vector<Pair> left, vector<Pair> right) {
 	return left;
 }
 
-Matching min_matching_memoizado (vector<int> A, vector<int> B) {
+Matching min_matching_memoized (vector<int> A, vector<int> B) {
     vector<Pair> result;
 
     vector<Pair> blocks_A = get_blocks (A);
@@ -305,11 +305,22 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 int main () {
 	vector<int> A{1, 0, 0, 1, 1, 0, 1};
 	vector<int> B{0, 1, 1, 1, 0, 0, 1};
+	cout << "Recursive Algorithm" << endl;
 
-	Matching result = min_matching_memoizado (A, B);
-	for (int i = 0; i < result.matching.size (); i++)
+	Matching result_recursive = min_matching_recursive (A, B);
+	cout << "All  matching :" << endl;
+	for (int i = 0; i < result_recursive.matching.size (); i++)
 	{
-		cout << "(" << result.matching[i].i << "," << result.matching[i].j << ")" << " ";
+		cout << "(" << result_recursive.matching[i].i << "," << result_recursive.matching[i].j << ")" << " ";
 	}
-	cout << endl << result.weight << endl;
+	cout << "Minimum cost matching :" << result_recursive.weight << endl;
+
+    cout << "Memoized Algorithm" << endl;
+    Matching result_memoized = min_matching_memoized (A, B);
+    cout << "All  matching :" << endl;
+    for (int i = 0; i < result_memoized.matching.size (); i++)
+    {
+        cout << "(" << result_memoized.matching[i].i << "," << result_memoized.matching[i].j << ")" << " ";
+    }
+    cout << "Minimum cost matching :" << result_memoized.weight << endl;
 }
