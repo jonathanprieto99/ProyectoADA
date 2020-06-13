@@ -303,7 +303,8 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 
 
 int main () {
-	vector<int> A{1, 0, 0, 1, 1, 0,1};
+    cout << "Caso base Agrupacion:" ;
+    vector<int> A{1, 0, 0, 1, 1, 0, 1};
 	vector<int> B{0, 1, 1, 1, 0, 0};
 	cout << "Recursive Algorithm" << endl;
 
