@@ -215,7 +215,7 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 	min_agrupacion.weight = INT_MAX;
 	min_division.weight = INT_MAX;
 	
-	if (mem[A.size () - 1][B.size () - 1].weight != 0) {
+	if (mem[A.size () -1 ][B.size () -1].weight != 0) {
 		return mem[A.size () - 1][B.size () - 1];
 	}
 	if (A.size () == 1 and B.size () == 1) {
@@ -308,19 +308,21 @@ int main () {
 	cout << "Recursive Algorithm" << endl;
 
 	Matching result_recursive = min_matching_recursive (A, B);
-	cout << "All  matching :" << endl;
+	cout << "Best matching :" << endl;
 	for (int i = 0; i < result_recursive.matching.size (); i++)
 	{
 		cout << "(" << result_recursive.matching[i].i << "," << result_recursive.matching[i].j << ")" << " ";
 	}
+	cout<<endl;
 	cout << "Minimum cost matching :" << result_recursive.weight << endl;
 
     cout << "Memoized Algorithm" << endl;
     Matching result_memoized = min_matching_memoized (A, B);
-    cout << "All  matching :" << endl;
+    cout << "Best  matching :" << endl;
     for (int i = 0; i < result_memoized.matching.size (); i++)
     {
         cout << "(" << result_memoized.matching[i].i << "," << result_memoized.matching[i].j << ")" << " ";
     }
+    cout << endl;
     cout << "Minimum cost matching :" << result_memoized.weight << endl;
 }
