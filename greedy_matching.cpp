@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <climits>
-
+#include <cmath>
 using namespace std;
 
 struct Pair {
@@ -101,8 +101,8 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 	Matching min_agrupacion;
 	Matching min_division;
 
-	min_agrupacion.weight = INT_MAX;
-	min_division.weight = INT_MAX;
+	min_agrupacion.weight = INFINITY;
+	min_division.weight = INFINITY;
 
 	if (A.size () == 1 and B.size () == 1) {
 		Pair match;
@@ -153,7 +153,7 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 		merge.weight = min_left.weight + min_right.weight;
 		if (merge.weight < min_agrupacion.weight)
 			min_agrupacion = merge;
-		for (int h = 0; h < merge.matching.size (); h++)
+		for (auto h = 0; h < merge.matching.size (); h++)
         	{
                 	cout << "(" << merge.matching[h].i << "," << merge.matching[h].j << ")" << " ";
         	}
@@ -174,7 +174,7 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 		merge.weight = min_left.weight + min_right.weight;
 		if (merge.weight < min_division.weight)
 			min_division = merge;
-		for (int h = 0; h < merge.matching.size (); h++)
+		for (auto h = 0; h < merge.matching.size (); h++)
         	{
                 	cout << "(" << merge.matching[h].i << "," << merge.matching[h].j << ")" << " ";
         	}
@@ -212,11 +212,11 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 	Matching min_agrupacion;
 	Matching min_division;
 
-	min_agrupacion.weight = INT_MAX;
-	min_division.weight = INT_MAX;
+	min_agrupacion.weight = INFINITY;
+	min_division.weight = INFINITY;
 	
-	if (mem[A.size () -1 ][B.size () -1].weight != 0) {
-		return mem[A.size () - 1][B.size () - 1];
+	if (mem[i][j].weight != 0) {
+		return mem[i][j];
 	}
 	if (A.size () == 1 and B.size () == 1) {
 		Pair match;
