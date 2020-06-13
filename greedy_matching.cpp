@@ -214,9 +214,11 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 
 	min_agrupacion.weight = INT_MAX;
 	min_division.weight = INT_MAX;
-	
-	if (mem[A.size () - 1][B.size () - 1].weight != 0) {
-		return mem[A.size () - 1][B.size () - 1];
+	if (A.size () <= mem.size () - 1 and B.size () <= mem[0].size () - 1) {	
+		if (mem[A.size ()][B.size ()].weight != 0) {
+			cout << "registrado" << endl;
+			return mem[A.size ()][B.size ()];
+		}
 	}
 	if (A.size () == 1 and B.size () == 1) {
 		Pair match;
@@ -268,12 +270,12 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 		merge.weight = min_left.weight + min_right.weight;
 		if (merge.weight < min_agrupacion.weight)
 			min_agrupacion = merge;
-		for (int h = 0; h < merge.matching.size (); h++)
+		/*for (int h = 0; h < merge.matching.size (); h++)
         	{
                 	cout << "(" << merge.matching[h].i << "," << merge.matching[h].j << ")" << " ";
         	}
-		cout << merge.weight << endl;
-		mem[k][j - 1] = merge;
+		cout << merge.weight << endl;*/
+		mem[left_A.size ()][left_B.size ()] = min_left;
 	}
 	for (int k = j - 1; k >= 0; k--) {
 		vector<Pair> left_A (A.begin (), A.end () - 1);
@@ -282,20 +284,20 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 		vector<Pair> left_B (B.begin (), B.begin () + k + 1);
 		vector<Pair> right_B (B.begin () + k + 1, B.end ());
 		
-		Matching min_left = opt_solution (left_A, left_B);
-		Matching min_right = opt_solution (right_A, right_B);
+		Matching min_left = opt_solution_mem (left_A, left_B);
+		Matching min_right = opt_solution_mem (right_A, right_B);
 		
 		Matching merge;
 		merge.matching = merge_matchings (min_left.matching, min_right.matching);
 		merge.weight = min_left.weight + min_right.weight;
 		if (merge.weight < min_division.weight)
 			min_division = merge;
-		for (int h = 0; h < merge.matching.size (); h++)
+		/*for (int h = 0; h < merge.matching.size (); h++)
         	{
                 	cout << "(" << merge.matching[h].i << "," << merge.matching[h].j << ")" << " ";
         	}
-		cout << merge.weight << endl;
-		mem[i - 1][k] = merge;
+		cout << merge.weight << endl;*/
+		mem[left_A.size ()][left_B.size ()] = min_left;
 	}
 
 	return min_agrupacion.weight < min_division.weight ? min_agrupacion : min_division;
