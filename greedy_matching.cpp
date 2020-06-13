@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <climits>
 
 using namespace std;
 
@@ -8,10 +9,17 @@ struct Pair {
 	int j;
 };
 
+struct Matching {
+	vector<Pair> matching;
+	float weight;
+};
+
 /* Prototipos */
 vector<Pair> get_blocks (vector<int>);
 vector<Pair> greedy_matching (vector<int>, vector<int>);
-
+Matching greedy_matching_recursive (vector<int>, vector<int>);
+Matching opt_solution (vector<Pair>, vector<Pair>);
+vector<Pair> merge_matchings (vector<Pair>, vector<Pair>);
 
 vector<Pair> get_blocks (vector<int> A) {
 	vector<Pair> blocks;
@@ -71,32 +79,122 @@ vector<Pair> greedy_matching (vector<int> A, vector<int> B) {
 	}
 	return result;
 }
-/*
 
-vector<Pair> greedy_matching_recursive (vector<int> A, vector<int> B) {
+Matching greedy_matching_recursive (vector<int> A, vector<int> B) {
     vector<Pair> result;
 
     vector<Pair> blocks_A = get_blocks (A);
     vector<Pair> blocks_B = get_blocks (B);
 
-    int i = 0, j = 0, k = 0;
-    int n = blocks_A.size ();
-    int m = blocks_B.size ();
+    Matching min_matching = opt_solution (blocks_A, blocks_B);
 
-    int max;
-
-    return result;
+    return min_matching;
 }
- */
+
+Matching opt_solution (vector<Pair> A, vector<Pair> B) {
+	Matching min_match;
+	int i = A.size () - 1;
+	int j = B.size () - 1;
+	Matching min_agrupacion;
+	Matching min_division;
+
+	min_agrupacion.weight = INT_MAX;
+	min_division.weight = INT_MAX;
+
+	if (A.size () == 1 and B.size () == 1) {
+		Pair match;
+		match.i = A[0].i;
+		match.j = B[0].j;
+		min_match.matching.push_back (match);
+		min_match.weight = A[0].i / B[0].j;
+		return min_match;
+	}
+		
+	if (A.size () == 1 and B.size () > 1) {
+		Pair match;
+		int sum = 0;
+		match.i = A[0].i;
+		for (int it = 0; it < B.size (); it++) {
+			match.j = B[it].j;
+			min_match.matching.push_back (match);
+			sum += B[it].j;
+		}
+		min_match.weight = A[0].i / sum;
+		return min_match;
+	}
+	if (B.size () == 1 and A.size () > 1){
+		Pair match;
+		int sum = 0;
+		match.j = B[0].j;
+		for (int it = 0; it < A.size (); it++){
+			match.i = A[it].i;
+			min_match.matching.push_back (match);
+			sum += A[it].i;
+		}
+		min_match.weight = sum / B[0].j;
+		return min_match;
+	}
+	
+	for (int k = i - 1; k >= 0; k--) {
+		vector<Pair> left_A (A.begin (), A.begin () + k + 1);
+		vector<Pair> right_A (A.begin () + k + 1, A.end ());
+		
+		vector<Pair> left_B (B.begin (), B.end () - 1);
+		vector<Pair> right_B; right_B.push_back (B[B.size () - 1]);
+		
+		Matching min_left = opt_solution (left_A, left_B);
+		Matching min_right = opt_solution (right_A, right_B);
+		
+		Matching merge;
+		merge.matching = merge_matchings (min_left.matching, min_right.matching);
+		merge.weight = min_left.weight + min_right.weight;
+		if (merge.weight < min_agrupacion.weight)
+			min_agrupacion = merge;
+		for (int h = 0; h < merge.matching.size (); h++)
+        	{
+                	cout << "(" << merge.matching[h].i << "," << merge.matching[h].j << ")" << " ";
+        	}
+		cout << merge.weight << endl;
+	}
+	for (int k = j - 1; k >= 0; k--) {
+		vector<Pair> left_A (A.begin (), A.end () - 1);
+		vector<Pair> right_A; right_A.push_back (A[A.size () - 1]);
+
+		vector<Pair> left_B (B.begin (), B.begin () + k + 1);
+		vector<Pair> right_B (B.begin () + k + 1, B.end ());
+		
+		Matching min_left = opt_solution (left_A, left_B);
+		Matching min_right = opt_solution (right_A, right_B);
+		
+		Matching merge;
+		merge.matching = merge_matchings (min_left.matching, min_right.matching);
+		merge.weight = min_left.weight + min_right.weight;
+		if (merge.weight < min_division.weight)
+			min_division = merge;
+		for (int h = 0; h < merge.matching.size (); h++)
+        	{
+                	cout << "(" << merge.matching[h].i << "," << merge.matching[h].j << ")" << " ";
+        	}
+		cout << merge.weight << endl;
+	}
+
+	return min_agrupacion.weight < min_division.weight ? min_agrupacion : min_division;
+}
+
+vector<Pair> merge_matchings (vector<Pair> left, vector<Pair> right) {
+	for (int i = 0; i < right.size (); i++)
+		left.push_back (right[i]);
+	return left;
+}
 
 int main () {
 	vector<int> A{1, 0, 0, 1, 1, 0, 1};
 	vector<int> B{0, 1, 1, 1, 0, 0, 1};
 
-	vector<Pair> result = greedy_matching (A, B);
-	for (int i = 0; i < result.size (); i++)
+	Matching result = greedy_matching_recursive (A, B);
+	for (int i = 0; i < result.matching.size (); i++)
 	{
-		cout << "(" << result[i].i << "," << result[i].j << ")" << " ";
+		cout << "(" << result.matching[i].i << "," << result.matching[i].j << ")" << " ";
 	}
-	cout << endl;
+	cout << endl << result.weight << endl;
 }
