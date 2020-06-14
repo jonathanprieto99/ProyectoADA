@@ -20,7 +20,7 @@ Matching greedy_matching (vector<int>, vector<int>);
 Matching min_matching_recursive (vector<int>, vector<int>);
 Matching min_matching_memoized (vector<int>, vector<int>);
 Matching opt_solution (vector<Pair>, vector<Pair>);
-Matching opt_solution_mem (vector<Pair>, vector<Pair>);
+Matching opt_solution_mem (vector<Pair>, vector<Pair>, bool left);
 vector<Pair> merge_matchings (vector<Pair>, vector<Pair>);
 vector<int> string_to_vector (string);
 void print_matching (Matching);
@@ -76,7 +76,7 @@ Matching greedy_matching (vector<int> A, vector<int> B) {
 	Pair match;
 	float weight = 0;
 	while (i < max && j < max) {
-		if (i == n) {
+		/*if (i == n) {
                         float sum = 0;
                         while (j < max) {
 				match.i = blocks_A[i].i;
@@ -97,8 +97,8 @@ Matching greedy_matching (vector<int> A, vector<int> B) {
                                 i++;
                         }
                         weight += sum / (blocks_B[j].j - blocks_B[j].i + 1);
-		}
-		else {
+		}*/
+		/*else {*/
 			match.i = blocks_A[i].i;
 			match.j = blocks_B[j].j;
 			weight += (blocks_A[i].j - blocks_A[i].i + 1) / (blocks_B[j].j - blocks_B[j].i + 1);
@@ -108,7 +108,7 @@ Matching greedy_matching (vector<int> A, vector<int> B) {
 				i++;
 			if (j < m)
 				j++;	
-		}
+		/*}*/
 	}
 	result.weight = weight;
 	return result;
@@ -223,12 +223,12 @@ Matching min_matching_memoized (vector<int> A, vector<int> B) {
     for (int i = 0; i < blocks_A.size (); i++)
                 mem[i].resize (blocks_B.size ());
 
-    Matching min_matching = opt_solution_mem (blocks_A, blocks_B);
+    Matching min_matching = opt_solution_mem (blocks_A, blocks_B, false);
 
     return min_matching;
 }
 
-Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
+Matching opt_solution_mem (vector<Pair> A, vector<Pair> B, bool left) {
 	Matching min_match;
 	int i = A.size () - 1;
 	int j = B.size () - 1;
@@ -237,10 +237,11 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 
 	min_agrupacion.weight = INT_MAX;
 	min_division.weight = INT_MAX;
-	if (A.size () <= mem.size () - 1 and B.size () <= mem[0].size () - 1) {	
-		if (mem[A.size ()][B.size ()].weight != 0) {
-			print_matching (mem[A.size ()][B.size ()]);
-			return mem[A.size ()][B.size ()];
+	if (left) {
+		if (A.size () <= mem.size () - 1 and B.size () <= mem[0].size () - 1) {	
+			if (mem[A.size ()][B.size ()].weight != 0) {
+				return mem[A.size ()][B.size ()];
+			}
 		}
 	}
 	if (A.size () == 1 and B.size () == 1) {
@@ -285,8 +286,8 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 		vector<Pair> left_B (B.begin (), B.end () - 1);
 		vector<Pair> right_B; right_B.push_back (B[B.size () - 1]);
 		
-		Matching min_left = opt_solution_mem (left_A, left_B);
-		Matching min_right = opt_solution_mem (right_A, right_B);
+		Matching min_left = opt_solution_mem (left_A, left_B, true);
+		Matching min_right = opt_solution_mem (right_A, right_B, false);
 		
 		Matching merge;
 		merge.matching = merge_matchings (min_left.matching, min_right.matching);
@@ -308,8 +309,8 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 		vector<Pair> left_B (B.begin (), B.begin () + k + 1);
 		vector<Pair> right_B (B.begin () + k + 1, B.end ());
 		
-		Matching min_left = opt_solution_mem (left_A, left_B);
-		Matching min_right = opt_solution_mem (right_A, right_B);
+		Matching min_left = opt_solution_mem (left_A, left_B, true);
+		Matching min_right = opt_solution_mem (right_A, right_B, false);
 		
 		Matching merge;
 		merge.matching = merge_matchings (min_left.matching, min_right.matching);
@@ -338,8 +339,8 @@ void print_matching (Matching result) {
 }
 
 int main () {
-	vector<int> A{1, 1, 1, 0, 0, 1, 1, 0, 1};
-	vector<int> B{1, 1, 0, 1, 0, 0, 0, 1, 1};
+	vector<int> A{1, 0, 0, 0, 0, 1, 1, 0, 1};
+	vector<int> B{1, 1, 0, 0, 0, 0, 0, 1, 1};
 
 	/*while (true) {
 		string str_A, str_B;
@@ -369,14 +370,17 @@ int main () {
 				return 0;
 			case 1: ;
 				result = greedy_matching (A, B);
+				cout << "resultado" << endl;
 				print_matching (result);
 				break;
 			case 2: ;
 				result = min_matching_recursive (A, B);
+				cout << "resultado" << endl;
 				print_matching (result);
 				break;
 			case 3: ;
 				result = min_matching_memoized (A, B);
+				cout << "resultado" << endl;
 				print_matching (result);
 				break;
 			default:
