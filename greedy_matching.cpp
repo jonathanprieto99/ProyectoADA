@@ -1,12 +1,14 @@
 #include <iostream>
 #include <vector>
 #include <climits>
+#include <stdio.h>
 
 using namespace std;
 
 struct Pair {
 	float i;
 	float j;
+	int index;
 };
 
 struct Matching {
@@ -25,13 +27,17 @@ vector<Pair> merge_matchings (vector<Pair>, vector<Pair>);
 vector<int> string_to_vector (string);
 void print_matching (Matching);
 
+/* Matriz donde se almacenan soluciones a subproblemas */
 vector<vector<Matching>> mem;
 
+/* Funcion que genera los bloques para un vector. Recorre todo el vector
+ * Generando bloques, por lo que tiene un tiempo de ejecucion de O(n) */
 vector<Pair> get_blocks (vector<int> A) {
 	vector<Pair> blocks;
 	bool flag = false;
 	Pair block;
 	for (int i = 0; i < A.size (); i++) {
+		block.index = blocks.size ();
 		if (A[i] == 1) {
 			if (!flag) {
 				flag = true;
@@ -54,6 +60,10 @@ vector<Pair> get_blocks (vector<int> A) {
 	return blocks;
 }
 
+/*Genera un matching agrupando elementos de A y B uno por uno, y haciendo
+ * agrupaciones y divisiones cuando uno de estos llega a su limite. Ya que 
+ * siempre se recorrera el vector de bloques de mayor cantidad de elementos, 
+ * tiene un tiempo de ejecucion de O(max{m, n})*/
 Matching greedy_matching (vector<int> A, vector<int> B) {
 	Matching result;
 
@@ -76,44 +86,21 @@ Matching greedy_matching (vector<int> A, vector<int> B) {
 	Pair match;
 	float weight = 0;
 	while (i < max && j < max) {
-		/*if (i == n) {
-                        float sum = 0;
-                        while (j < max) {
-				match.i = blocks_A[i].i;
-				match.j = blocks_B[j].j;
-				result.matching.push_back (match);
-                                sum += blocks_B[j].j - blocks_B[j].i + 1;
-                                j++;
-                        }
-                        weight += (blocks_A[i].j - blocks_A[i].i + 1) / sum;
-                }
-                else if (j == m) {
-                        float sum = 0;
-                        while (i < max) {
-                                match.i = blocks_A[i].i;
-                                match.j = blocks_B[j].j;
-                                result.matching.push_back (match);
-                                sum += blocks_A[i].j - blocks_A[i].i + 1;
-                                i++;
-                        }
-                        weight += sum / (blocks_B[j].j - blocks_B[j].i + 1);
-		}*/
-		/*else {*/
-			match.i = blocks_A[i].i;
-			match.j = blocks_B[j].j;
-			weight += (blocks_A[i].j - blocks_A[i].i + 1) / (blocks_B[j].j - blocks_B[j].i + 1);
-			result.matching.push_back (match);
+		match.i = blocks_A[i].index;
+		match.j = blocks_B[j].index;
+		weight += (blocks_A[i].j - blocks_A[i].i + 1) / (blocks_B[j].j - blocks_B[j].i + 1);
+		result.matching.push_back (match);
 
-			if (i < n)
-				i++;
-			if (j < m)
-				j++;	
-		/*}*/
+		if (i < n)
+			i++;
+		if (j < m)
+			j++;	
 	}
 	result.weight = weight;
 	return result;
 }
 
+/* Genera bloques para los vectores */
 Matching min_matching_recursive (vector<int> A, vector<int> B) {
     vector<Pair> result;
 
@@ -137,8 +124,8 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 
 	if (A.size () == 1 and B.size () == 1) {
 		Pair match;
-		match.i = A[0].i;
-		match.j = B[0].j;
+		match.i = A[0].index;
+		match.j = B[0].index;
 		min_match.matching.push_back (match);
 		min_match.weight = (A[0].j - A[0].i + 1) / (B[0].j - B[0].i + 1);
 		return min_match;
@@ -147,9 +134,9 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 	if (A.size () == 1 and B.size () > 1) {
 		Pair match;
 		float sum = 0;
-		match.i = A[0].i;
+		match.i = A[0].index;
 		for (int it = 0; it < B.size (); it++) {
-			match.j = B[it].j;
+			match.j = B[it].index;
 			min_match.matching.push_back (match);
 			sum += B[it].j - B[it].i + 1;
 		}
@@ -159,9 +146,9 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 	if (B.size () == 1 and A.size () > 1){
 		Pair match;
 		float sum = 0;
-		match.j = B[0].j;
+		match.j = B[0].index;
 		for (int it = 0; it < A.size (); it++){
-			match.i = A[it].i;
+			match.i = A[it].index;
 			min_match.matching.push_back (match);
 			sum += A[it].j - A[it].i + 1;
 		}
@@ -218,7 +205,11 @@ Matching min_matching_memoized (vector<int> A, vector<int> B) {
 
     vector<Pair> blocks_A = get_blocks (A);
     vector<Pair> blocks_B = get_blocks (B);
-
+    
+    if (blocks_A.size () == 0 or blocks_B.size ()) {
+        cerr << "Vector sin bloques introducido." << endl;
+    } 
+    
     mem.resize (blocks_A.size ());
     for (int i = 0; i < blocks_A.size (); i++)
                 mem[i].resize (blocks_B.size ());
@@ -246,8 +237,8 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B, bool left) {
 	}
 	if (A.size () == 1 and B.size () == 1) {
 		Pair match;
-                match.i = A[0].i;
-                match.j = B[0].j;
+                match.i = A[0].index;
+                match.j = B[0].index;
                 min_match.matching.push_back (match);
                 min_match.weight = (A[0].j - A[0].i + 1) / (B[0].j - B[0].i + 1);
                 return min_match;
@@ -256,9 +247,9 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B, bool left) {
 	if (A.size () == 1 and B.size () > 1) {
 		Pair match;
                 float sum = 0;
-                match.i = A[0].i;
+                match.i = A[0].index;
                 for (int it = 0; it < B.size (); it++) {
-                        match.j = B[it].j;
+                        match.j = B[it].index;
                         min_match.matching.push_back (match);
                         sum += B[it].j - B[it].i + 1;
                 }
@@ -269,9 +260,9 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B, bool left) {
 	if (B.size () == 1 and A.size () > 1){
 		Pair match;
                 float sum = 0;
-                match.j = B[0].j;
+                match.j = B[0].index;
                 for (int it = 0; it < A.size (); it++){
-                        match.i = A[it].i;
+                        match.i = A[it].index;
                         min_match.matching.push_back (match);
                         sum += A[it].j - A[it].i + 1;
                 }
@@ -338,23 +329,49 @@ void print_matching (Matching result) {
         cout << endl << "Weight: " << result.weight << endl;
 }
 
-int main () {
-	vector<int> A{1, 0, 0, 0, 0, 1, 1, 0, 1};
-	vector<int> B{1, 1, 0, 0, 0, 0, 0, 1, 1};
+vector<int> string_to_vector (string str) {
+	vector<int> result;
+	for (int i = 0; i < str.length (); i++) {
+		int value = str[i] - '0';
+		if (value != 0 and value != 1){
+			cout << "Error: Arreglo con valores no validos." << endl;
+			vector<int> vacio;
+			return vacio;
+		}
+		result.push_back (value);
+	}
+	return result;
+}
 
-	/*while (true) {
+int main () {
+	vector<int> A;
+	vector<int> B;
+	while (true) {
 		string str_A, str_B;
-		cout << "Ingrese arreglo A: ";
-		cin >> str_A;
-		cout << "Ingrese Arreglo B: ";
-		cin >> str_B;
-		if (A.length() == B.length ()) {
-			vector<int> A = string_to_vector (str_A);
-        		vector<int> B = string_to_vector (str_B);
-			if (valid_vector (A) and valid_vector (B))
+		do {
+			cout << "Ingrese arreglo A: ";
+			cin >> str_A;
+			if (str_A.length () == 0)
+				cout << "Arreglo vacio" << endl;
+		} while (str_A.length () == 0);
+		
+		do {
+			cout << "Ingrese Arreglo B: ";
+			cin >> str_B;
+			if (str_B.length () == 0)
+				cout << "Arreglo vacio" << endl;
+		} while (str_B.length () == 0);
+		if (str_A.length() == str_B.length ()) {
+			A = string_to_vector (str_A);
+        		B = string_to_vector (str_B);
+			if (A.size () != 0 and  B.size () != 0)
 				break;
 		}
-	}*/
+		else {
+			cout << "Arreglos de tamanos distintos. Ingrese nuevamente" << endl;
+		}
+		
+	}
 	
 	Matching result;
 	int option;
