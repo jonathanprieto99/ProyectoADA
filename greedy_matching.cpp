@@ -23,6 +23,7 @@ Matching opt_solution (vector<Pair>, vector<Pair>);
 Matching opt_solution_mem (vector<Pair>, vector<Pair>);
 vector<Pair> merge_matchings (vector<Pair>, vector<Pair>);
 vector<int> string_to_vector (string);
+void print_matching (Matching);
 
 vector<vector<Matching>> mem;
 
@@ -78,6 +79,9 @@ Matching greedy_matching (vector<int> A, vector<int> B) {
 		if (i == n) {
                         float sum = 0;
                         while (j < max) {
+				match.i = blocks_A[i].i;
+				match.j = blocks_B[j].j;
+				result.matching.push_back (match);
                                 sum += blocks_B[j].j - blocks_B[j].i + 1;
                                 j++;
                         }
@@ -88,13 +92,10 @@ Matching greedy_matching (vector<int> A, vector<int> B) {
                         while (i < max) {
                                 match.i = blocks_A[i].i;
                                 match.j = blocks_B[j].j;
-                                cout << "(" << match.i << "," << match.j << ")" << endl;
                                 result.matching.push_back (match);
                                 sum += blocks_A[i].j - blocks_A[i].i + 1;
-                                cout << sum << endl;
                                 i++;
                         }
-			cout << "block size of B: " << (blocks_B[j].j - blocks_B[j].i + 1) << endl;
                         weight += sum / (blocks_B[j].j - blocks_B[j].i + 1);
 		}
 		else {
@@ -152,7 +153,7 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 			min_match.matching.push_back (match);
 			sum += B[it].j - B[it].i + 1;
 		}
-		min_match.weight = A[0].i / sum;
+		min_match.weight = (A[0].j - A[0].i + 1) / sum;
 		return min_match;
 	}
 	if (B.size () == 1 and A.size () > 1){
@@ -164,7 +165,7 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 			min_match.matching.push_back (match);
 			sum += A[it].j - A[it].i + 1;
 		}
-		min_match.weight = sum / B[0].j;
+		min_match.weight = sum / (B[0].j - B[0].i + 1);
 		return min_match;
 	}
 	
@@ -236,43 +237,44 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 	min_division.weight = INT_MAX;
 	if (A.size () <= mem.size () - 1 and B.size () <= mem[0].size () - 1) {	
 		if (mem[A.size ()][B.size ()].weight != 0) {
-			cout << "registrado" << endl;
+			cout << "recuperando para i = "  << A.size () << "y j = " << B.size () << endl;
+			print_matching (mem[A.size ()][B.size ()]);
 			return mem[A.size ()][B.size ()];
 		}
 	}
 	if (A.size () == 1 and B.size () == 1) {
 		Pair match;
-		match.i = A[0].i;
-		match.j = B[0].j;
-		min_match.matching.push_back (match);
-		min_match.weight = A[0].i / B[0].j;
-		return min_match;
+                match.i = A[0].i;
+                match.j = B[0].j;
+                min_match.matching.push_back (match);
+                min_match.weight = (A[0].j - A[0].i + 1) / (B[0].j - B[0].i + 1);
+                return min_match;
 	}
 		
 	if (A.size () == 1 and B.size () > 1) {
 		Pair match;
-		int sum = 0;
-		match.i = A[0].i;
-		for (int it = 0; it < B.size (); it++) {
-			match.j = B[it].j;
-			min_match.matching.push_back (match);
-			sum += B[it].j;
-		}
-		min_match.weight = A[0].i / sum;
-		return min_match;
+                float sum = 0;
+                match.i = A[0].i;
+                for (int it = 0; it < B.size (); it++) {
+                        match.j = B[it].j;
+                        min_match.matching.push_back (match);
+                        sum += B[it].j - B[it].i + 1;
+                }
+                min_match.weight = (A[0].j - A[0].i + 1) / sum;
+                return min_match;
 	}
 
 	if (B.size () == 1 and A.size () > 1){
 		Pair match;
-		int sum = 0;
-		match.j = B[0].j;
-		for (int it = 0; it < A.size (); it++){
-			match.i = A[it].i;
-			min_match.matching.push_back (match);
-			sum += A[it].i;
-		}
-		min_match.weight = sum / B[0].j;
-		return min_match;
+                float sum = 0;
+                match.j = B[0].j;
+                for (int it = 0; it < A.size (); it++){
+                        match.i = A[it].i;
+                        min_match.matching.push_back (match);
+                        sum += A[it].j - A[it].i + 1;
+                }
+                min_match.weight = sum / (B[0].j - B[0].i + 1);
+                return min_match;
 	}
 	
 	for (int k = i - 1; k >= 0; k--) {
@@ -288,6 +290,8 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 		Matching merge;
 		merge.matching = merge_matchings (min_left.matching, min_right.matching);
 		merge.weight = min_left.weight + min_right.weight;
+		print_matching (min_left);
+		print_matching (min_right);
 		if (merge.weight < min_agrupacion.weight)
 			min_agrupacion = merge;
 		/*for (int h = 0; h < merge.matching.size (); h++)
@@ -333,8 +337,8 @@ void print_matching (Matching result) {
 }
 
 int main () {
-	vector<int> A{1, 1, 1, 0, 0 };
-	vector<int> B{1, 1, 0, 0, 0 };
+	vector<int> A{1, 1, 1, 0, 0};
+	vector<int> B{1, 1, 0, 1, 0};
 
 	/*while (true) {
 		string str_A, str_B;
