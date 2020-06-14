@@ -184,6 +184,7 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 		merge.weight = min_left.weight + min_right.weight;
 		if (merge.weight < min_agrupacion.weight)
 			min_agrupacion = merge;	
+		print_matching (merge);
 	}
 	for (int k = j - 1; k >= 0; k--) {
 		vector<Pair> left_A (A.begin (), A.end () - 1);
@@ -199,7 +200,8 @@ Matching opt_solution (vector<Pair> A, vector<Pair> B) {
 		merge.matching = merge_matchings (min_left.matching, min_right.matching);
 		merge.weight = min_left.weight + min_right.weight;
 		if (merge.weight < min_division.weight)
-			min_division = merge;	
+			min_division = merge;
+		print_matching (merge);
 	}
 
 	return min_agrupacion.weight < min_division.weight ? min_agrupacion : min_division;
@@ -237,7 +239,6 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 	min_division.weight = INT_MAX;
 	if (A.size () <= mem.size () - 1 and B.size () <= mem[0].size () - 1) {	
 		if (mem[A.size ()][B.size ()].weight != 0) {
-			cout << "recuperando para i = "  << A.size () << "y j = " << B.size () << endl;
 			print_matching (mem[A.size ()][B.size ()]);
 			return mem[A.size ()][B.size ()];
 		}
@@ -290,8 +291,6 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
 		Matching merge;
 		merge.matching = merge_matchings (min_left.matching, min_right.matching);
 		merge.weight = min_left.weight + min_right.weight;
-		print_matching (min_left);
-		print_matching (min_right);
 		if (merge.weight < min_agrupacion.weight)
 			min_agrupacion = merge;
 		/*for (int h = 0; h < merge.matching.size (); h++)
@@ -299,6 +298,7 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
                 	cout << "(" << merge.matching[h].i << "," << merge.matching[h].j << ")" << " ";
         	}
 		cout << merge.weight << endl;*/
+		print_matching (merge);
 		mem[left_A.size ()][left_B.size ()] = min_left;
 	}
 	for (int k = j - 1; k >= 0; k--) {
@@ -321,6 +321,7 @@ Matching opt_solution_mem (vector<Pair> A, vector<Pair> B) {
                 	cout << "(" << merge.matching[h].i << "," << merge.matching[h].j << ")" << " ";
         	}
 		cout << merge.weight << endl;*/
+		print_matching (merge);
 		mem[left_A.size ()][left_B.size ()] = min_left;
 	}
 
@@ -337,8 +338,8 @@ void print_matching (Matching result) {
 }
 
 int main () {
-	vector<int> A{1, 1, 1, 0, 0};
-	vector<int> B{1, 1, 0, 1, 0};
+	vector<int> A{1, 1, 1, 0, 0, 1, 1, 0, 1};
+	vector<int> B{1, 1, 0, 1, 0, 0, 0, 1, 1};
 
 	/*while (true) {
 		string str_A, str_B;
