@@ -70,7 +70,7 @@ Matching greedy_matching (vector<int> A, vector<int> B) {
 	vector<Pair> blocks_A = get_blocks (A);
 	vector<Pair> blocks_B = get_blocks (B);
 
-	int i = 0, j = 0, k = 0;
+	int i = 0, j = 0;
 	int n = blocks_A.size ();
 	int m = blocks_B.size ();
 
