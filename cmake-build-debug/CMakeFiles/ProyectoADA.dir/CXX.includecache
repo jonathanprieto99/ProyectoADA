@@ -13,8 +13,6 @@ vector
 -
 climits
 -
-stdio.h
--
-stdlib.h
+cstdlib
 -
 
