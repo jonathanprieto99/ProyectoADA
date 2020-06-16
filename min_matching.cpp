@@ -211,7 +211,7 @@ Matching min_matching_memoized (vector<int> A, vector<int> B) {
     vector<Pair> blocks_A = get_blocks (A);
     vector<Pair> blocks_B = get_blocks (B);
     
-    if (blocks_A.size () == 0 or blocks_B.size ()) {
+    if (blocks_A.size () == 0 or blocks_B.size () == 0) {
         cerr << "Vector sin bloques introducido." << endl;
     } 
     
