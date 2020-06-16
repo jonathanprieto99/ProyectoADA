@@ -2,6 +2,7 @@
 #include <vector>
 #include <climits>
 #include <stdio.h>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -73,6 +74,10 @@ Matching greedy_matching (vector<int> A, vector<int> B) {
 	int i = 0, j = 0;
 	int n = blocks_A.size ();
 	int m = blocks_B.size ();
+	if (n == 0 or m == 0) {
+		cout << "Error: No hay bloques en uno de los vectores" << endl;
+		exit (1);
+	}
 
 	int max;
 	if (n > m) {
@@ -347,62 +352,71 @@ int main () {
 	vector<int> A;
 	vector<int> B;
 	while (true) {
-		string str_A, str_B;
-		do {
-			cout << "Ingrese arreglo A: ";
-			cin >> str_A;
-			if (str_A.length () == 0)
-				cout << "Arreglo vacio" << endl;
-		} while (str_A.length () == 0);
+		while (true) {
+			string str_A, str_B;
+			do {
+				cout << "Ingrese arreglo A: ";
+				cin >> str_A;
+				if (str_A.length () == 0)
+					cout << "Arreglo vacio" << endl;
+			} while (str_A.length () == 0);
 		
-		do {
-			cout << "Ingrese Arreglo B: ";
-			cin >> str_B;
-			if (str_B.length () == 0)
-				cout << "Arreglo vacio" << endl;
-		} while (str_B.length () == 0);
-		if (str_A.length() == str_B.length ()) {
-			A = string_to_vector (str_A);
-        		B = string_to_vector (str_B);
-			if (A.size () != 0 and  B.size () != 0)
-				break;
-		}
-		else {
-			cout << "Arreglos de tamanos distintos. Ingrese nuevamente" << endl;
-		}
+			do {
+				cout << "Ingrese Arreglo B: ";
+				cin >> str_B;
+				if (str_B.length () == 0)
+					cout << "Arreglo vacio" << endl;
+			} while (str_B.length () == 0);
+			if (str_A.length() == str_B.length ()) {
+				A = string_to_vector (str_A);
+        			B = string_to_vector (str_B);
+				if (A.size () == 0 or  B.size () == 0)
+					cout << "Se ha ingresado un arreglo vacio" << endl;
+				else
+					break;
+			}
+			else {
+				cout << "Arreglos de tamanos distintos. Ingrese nuevamente" << endl;
+			}
 		
-	}
+		}
 	
-	Matching result;
-	int option;
-	cout << "[1] Matching Voraz" << endl;
-	cout << "[2] Matching Minimo Recursivo" << endl;
-	cout << "[3] Matching Minimo Memoizado" << endl;
-	cout << "[0] Salir" << endl;
-	while (true) {
-		cout << "Ingrese el algoritmo a utilizar: ";
-		cin >> option;
-		switch (option) {
-			case 0:
-				return 0;
-			case 1: ;
-				result = greedy_matching (A, B);
-				cout << "resultado" << endl;
-				print_matching (result);
-				break;
-			case 2: ;
-				result = min_matching_recursive (A, B);
-				cout << "resultado" << endl;
-				print_matching (result);
-				break;
-			case 3: ;
-				result = min_matching_memoized (A, B);
-				cout << "resultado" << endl;
-				print_matching (result);
-				break;
-			default:
-				cout << "No existe la opcion " << option << endl;
-
+		Matching result;
+		int option;
+		bool new_vector = false;
+		cout << "[1] Matching Voraz" << endl;
+		cout << "[2] Matching Minimo Recursivo" << endl;
+		cout << "[3] Matching Minimo Memoizado" << endl;
+		cout << "[4] Ingresar Nuevo Vector" << endl;
+		cout << "[0] Salir" << endl;
+		while (!new_vector) {
+			cout << "Ingrese el algoritmo a utilizar: ";
+			cin >> option;
+			switch (option) {
+				case 0:
+					return 0;
+				case 1: ;
+					result = greedy_matching (A, B);
+					cout << "resultado" << endl;
+					print_matching (result);
+					break;
+				case 2: ;
+					result = min_matching_recursive (A, B);
+					cout << "resultado" << endl;
+					print_matching (result);
+					break;
+				case 3: ;
+					result = min_matching_memoized (A, B);
+					cout << "resultado" << endl;
+					print_matching (result);
+					break;
+				case 4: ;
+					new_vector = true;
+					break;
+				default:
+					cout << "No existe la opcion " << option << endl;
+	
+			}
 		}
 	}
 }
