@@ -1,0 +1,3 @@
+/home/alejandro/ProyectoADA/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/alejandro/ProyectoADA/cmake-build-debug/CMakeFiles/ProyectoADA.dir
+/home/alejandro/ProyectoADA/cmake-build-debug/CMakeFiles/edit_cache.dir
