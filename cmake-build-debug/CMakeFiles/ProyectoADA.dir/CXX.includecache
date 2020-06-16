@@ -6,11 +6,15 @@
 
 #IncludeRegexTransform: 
 
-/home/alejandro/ProyectoADA/greedy_matching.cpp
+/Users/jonathanprieto/Documents/GitHub/ProyectoADA/min_matching.cpp
 iostream
 -
 vector
 -
-
-/home/alejandro/ProyectoADA/main.cpp
+climits
+-
+stdio.h
+-
+stdlib.h
+-
 

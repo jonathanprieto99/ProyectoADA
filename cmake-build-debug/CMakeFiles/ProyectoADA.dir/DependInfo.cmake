@@ -4,10 +4,9 @@ set(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/alejandro/ProyectoADA/greedy_matching.cpp" "/home/alejandro/ProyectoADA/cmake-build-debug/CMakeFiles/ProyectoADA.dir/greedy_matching.cpp.o"
-  "/home/alejandro/ProyectoADA/main.cpp" "/home/alejandro/ProyectoADA/cmake-build-debug/CMakeFiles/ProyectoADA.dir/main.cpp.o"
+  "/Users/jonathanprieto/Documents/GitHub/ProyectoADA/min_matching.cpp" "/Users/jonathanprieto/Documents/GitHub/ProyectoADA/cmake-build-debug/CMakeFiles/ProyectoADA.dir/min_matching.cpp.o"
   )
-set(CMAKE_CXX_COMPILER_ID "GNU")
+set(CMAKE_CXX_COMPILER_ID "AppleClang")
 
 # The include file search paths:
 set(CMAKE_CXX_TARGET_INCLUDE_PATH
