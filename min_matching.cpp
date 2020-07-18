@@ -432,17 +432,25 @@ Matching fill_matrix(vector<Pair> blocks_A, vector<Pair> blocks_B)
 {
     for(int i = 0; i<= blocks_A.size()-1; i++)
     {
-        mem_pg[i][0]= getMatchGroup(blocks_A, blocks_B);
+	vector<Pair> part_A(blocks_A.begin (), blocks_A.begin () + 1 + i);
+	vector<Pair> part_B;
+	part_B.push_back (blocks_B[0]);
+        mem_pg[i][0]= getMatchGroup(part_A, part_B);
     }
     for(int j=0; j<=blocks_B.size()-1; j++)
     {
-        mem_pg[0][j]= getMatchDivision(blocks_A, blocks_B);
+	vector<Pair> part_A;
+	part_A.push_back (blocks_A[0]);
+	vector<Pair> part_B(blocks_B.begin (), blocks_B.begin () + 1 + j);
+        mem_pg[0][j]= getMatchDivision(part_A, part_B);
     }
     for(int i = 1; i<=blocks_A.size()-1; i++ )
     {
         for(int j=1; j<=blocks_B.size()-1; j++)
         {
-            mem_pg[i][j] = opt_solution_dp(blocks_A, blocks_B);
+	    vector<Pair> part_A(blocks_A.begin (), blocks_A.begin () + 1 + i);
+	    vector<Pair> part_B(blocks_B.begin (), blocks_B.begin () + 1 + j);
+            mem_pg[i][j] = opt_solution_dp(part_A, part_B);
         }
     }
     return mem_pg[blocks_A.size()-1][blocks_B.size()-1];
